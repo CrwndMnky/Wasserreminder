@@ -463,13 +463,13 @@
       <svg class="ring-svg" viewBox="0 0 240 240">
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="var(--accent3)"/>
-            <stop offset="50%" stop-color="var(--accent)"/>
-            <stop offset="100%" stop-color="var(--accent2)"/>
+            <stop id="ringStop1" offset="0%" stop-color="#00e5ff"/>
+            <stop id="ringStop2" offset="50%" stop-color="#5dd5ff"/>
+            <stop id="ringStop3" offset="100%" stop-color="#2196f3"/>
           </linearGradient>
           <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="var(--accent2)" stop-opacity="0.5"/>
+            <stop id="waterStop1" offset="0%" stop-color="#5dd5ff" stop-opacity="0.7"/>
+            <stop id="waterStop2" offset="100%" stop-color="#2196f3" stop-opacity="0.5"/>
           </linearGradient>
         </defs>
         <circle class="ring-bg-track" cx="120" cy="120" r="110"/>
@@ -749,7 +749,7 @@
     </div>
 
     <div class="modal-section" style="text-align:center; font-size: 11px; color: var(--muted); opacity: 0.6;">
-      Hydro v2.4 · Made with 💧
+      Hydro v2.5 · Made with 💧
     </div>
   </div>
 </div>
@@ -1031,6 +1031,15 @@ function applyTheme() {
 
   const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
   document.getElementById('themeColorMeta').setAttribute('content', bg || '#06121f');
+
+  // SVG gradients can't reliably read CSS vars in WebKit/iOS — set stop colors directly
+  const cs = getComputedStyle(document.body);
+  const a1 = cs.getPropertyValue('--accent').trim();
+  const a2 = cs.getPropertyValue('--accent2').trim();
+  const a3 = cs.getPropertyValue('--accent3').trim();
+  const set = (id, col) => { const el = document.getElementById(id); if (el && col) el.setAttribute('stop-color', col); };
+  set('ringStop1', a3); set('ringStop2', a1); set('ringStop3', a2);
+  set('waterStop1', a1); set('waterStop2', a2);
 }
 
 // === Effective hydration ===
