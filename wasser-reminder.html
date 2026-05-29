@@ -2,7 +2,8 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -87,6 +88,8 @@
     [data-mode="light"][data-theme="berry"] { --accent: #8e24aa; --accent2: #6a1b9a; --accent3: #ab47bc; }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    /* iOS zooms inputs with <16px text — force 16px on all form fields */
+    input, select, textarea { font-size: 16px !important; }
     html, body { overscroll-behavior-y: none; }
     body {
       background: radial-gradient(ellipse at top, var(--bg2), var(--bg) 70%);
@@ -340,8 +343,25 @@
     .profile-item .pi-info { flex: 1; }
     .profile-item .pi-name { font-size: 15px; font-weight: 600; }
     .profile-item .pi-sub { font-size: 11px; color: var(--muted); }
-    .profile-item .pi-active-badge { font-size: 10px; color: var(--accent); font-weight: 600; }
-    .profile-item .pi-del { width: 30px; height: 30px; border-radius: 50%; background: rgba(239,83,80,0.1); border: 1px solid rgba(239,83,80,0.2); color: #ef5350; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .profile-item .pi-edit { width: 30px; height: 30px; border-radius: 50%; background: var(--glass-strong); border: 1px solid var(--glass-border); color: var(--accent); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .profile-item .pi-edit:active { transform: scale(0.9); }
+    .profile-item .pi-del { width: 30px; height: 30px; border-radius: 50%; background: rgba(239,83,80,0.1); border: 1px solid rgba(239,83,80,0.2); color: #ef5350; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .profile-item .pi-del:active { transform: scale(0.9); }
+    .pi-active-badge { font-size: 10px; color: var(--accent); font-weight: 600; }
+
+    .edit-profile-overlay { position: fixed; inset: 0; background: rgba(0,12,24,0.8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); z-index: 150; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .edit-profile-overlay.visible { opacity: 1; pointer-events: all; }
+    .edit-profile-card { background: linear-gradient(180deg, var(--bg2), var(--surface)); border: 1px solid var(--glass-border); border-radius: 24px; padding: 24px; width: 100%; max-width: 360px; box-shadow: var(--shadow); }
+    .edit-profile-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; color: var(--strong); margin-bottom: 18px; text-align: center; }
+    .edit-label { display: block; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .edit-name-input { width: 100%; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 14px; color: var(--text); font-family: 'Inter', sans-serif; margin-bottom: 18px; }
+    .edit-name-input:focus { outline: none; border-color: var(--accent); }
+    .edit-avatar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 22px; }
+    .edit-avatar-option { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 26px; background: var(--glass); border: 2px solid transparent; border-radius: 12px; cursor: pointer; transition: all 0.15s; }
+    .edit-avatar-option:active { transform: scale(0.9); }
+    .edit-avatar-option.selected { border-color: var(--accent); background: var(--glass-strong); }
+    .edit-profile-actions { display: flex; gap: 10px; }
+    .edit-profile-actions button { flex: 1; }
 
     /* Drink type config */
     .qb-config { display: flex; flex-direction: column; gap: 10px; }
@@ -589,6 +609,21 @@
   </div>
 </div>
 
+<!-- EDIT PROFILE OVERLAY -->
+<div class="edit-profile-overlay" id="editProfileOverlay">
+  <div class="edit-profile-card">
+    <div class="edit-profile-title">Profil bearbeiten</div>
+    <label class="edit-label">Name</label>
+    <input type="text" id="editProfileName" class="edit-name-input" maxlength="20" placeholder="Name">
+    <label class="edit-label">Avatar</label>
+    <div class="edit-avatar-grid" id="editAvatarGrid"></div>
+    <div class="edit-profile-actions">
+      <button class="secondary-btn" style="margin:0;" onclick="closeEditProfile()">Abbrechen</button>
+      <button class="primary-btn" onclick="saveProfileEdit()">Speichern</button>
+    </div>
+  </div>
+</div>
+
 <!-- STATS MODAL -->
 <div class="modal" id="statsModal">
   <div class="modal-handle"></div>
@@ -758,7 +793,7 @@
     </div>
 
     <div class="modal-section" style="text-align:center; font-size: 11px; color: var(--muted); opacity: 0.6;">
-      Hydro v2.7 · Made with 💧
+      Hydro v2.8 · Made with 💧
     </div>
   </div>
 </div>
@@ -1461,13 +1496,51 @@ function renderProfiles() {
     return `<div class="profile-item ${active ? 'active' : ''}" onclick="switchProfile('${id}')">
       <div class="pi-avatar">${p.avatar}</div>
       <div class="pi-info">
-        <div class="pi-name">${p.name}</div>
+        <div class="pi-name">${p.name}${active ? ' <span class="pi-active-badge">● Aktiv</span>' : ''}</div>
         <div class="pi-sub">${p.amount || 0} / ${p.goal || 2000} ml heute</div>
       </div>
-      ${active ? '<div class="pi-active-badge">● Aktiv</div>' : (canDelete ? `<div class="pi-del" onclick="event.stopPropagation();deleteProfile('${id}')">✕</div>` : '')}
+      <div class="pi-edit" onclick="event.stopPropagation();editProfile('${id}')">✎</div>
+      ${canDelete ? `<div class="pi-del" onclick="event.stopPropagation();deleteProfile('${id}')">✕</div>` : ''}
     </div>`;
   }).join('');
 }
+
+let editingProfileId = null;
+function editProfile(id) {
+  editingProfileId = id;
+  const p = root.profiles[id];
+  document.getElementById('editProfileName').value = p.name;
+  const grid = document.getElementById('editAvatarGrid');
+  grid.innerHTML = AVATARS.map(a =>
+    `<div class="edit-avatar-option ${a.e === p.avatar ? 'selected' : ''}" data-av="${a.e}" onclick="pickEditAvatar(this)">${a.e}</div>`
+  ).join('');
+  document.getElementById('editProfileOverlay').classList.add('visible');
+  haptic();
+}
+function pickEditAvatar(el) {
+  document.querySelectorAll('.edit-avatar-option').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected');
+  haptic();
+}
+function saveProfileEdit() {
+  if (!editingProfileId) return;
+  const p = root.profiles[editingProfileId];
+  const newName = document.getElementById('editProfileName').value.trim().slice(0, 20);
+  const sel = document.querySelector('.edit-avatar-option.selected');
+  if (newName) p.name = newName;
+  if (sel) p.avatar = sel.dataset.av;
+  save();
+  closeEditProfile();
+  renderProfiles();
+  render(); // update header if editing active profile
+  showToast('Profil aktualisiert');
+  haptic();
+}
+function closeEditProfile() {
+  document.getElementById('editProfileOverlay').classList.remove('visible');
+  editingProfileId = null;
+}
+
 function switchProfile(id) {
   if (id === root.activeProfile) return;
   save();
@@ -1477,7 +1550,6 @@ function switchProfile(id) {
   rolloverDay();
   applyWeatherBoost();
   save();
-  // rebuild dynamic selects
   document.getElementById('avatarGrid').dataset.built = '';
   render();
   stopReminder(); if (state.reminderOn) startReminder();
@@ -1486,13 +1558,11 @@ function switchProfile(id) {
   haptic();
 }
 function addProfile() {
-  const name = prompt('Name des neuen Profils:', '');
-  if (!name) return;
   const id = 'p_' + Date.now();
-  root.profiles[id] = freshProfile(name.trim().slice(0, 20), '🐱');
+  root.profiles[id] = freshProfile('Neues Profil', '🐱');
   save();
   renderProfiles();
-  showToast('Profil erstellt');
+  editProfile(id); // open editor immediately
   haptic();
 }
 function deleteProfile(id) {
