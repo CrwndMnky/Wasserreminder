@@ -20,47 +20,71 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* === THEMES === */
+    /* === THEMES: accent identity + mode (dark/light) surfaces === */
+    /* Each theme sets its accent palette + matching blobs. Mode sets surfaces/text. */
+
+    /* --- Accent palettes --- */
     :root, [data-theme="ocean"] {
-      --bg: #06121f; --bg2: #0a1a2e; --surface: #0f2238; --surface2: #15304a;
-      --accent: #5dd5ff; --accent2: #2196f3; --accent3: #00e5ff; --gold: #ffd54f;
-      --text: #f0faff; --muted: #7a99b8; --strong: #ffffff;
-      --glass: rgba(93,213,255,0.06); --glass-strong: rgba(93,213,255,0.12); --glass-border: rgba(93,213,255,0.18);
+      --accent: #5dd5ff; --accent2: #2196f3; --accent3: #00e5ff;
+      --accent-rgb: 93,213,255;
       --blob1: #00e5ff; --blob2: #2196f3; --blob3: #5dd5ff;
-      --shadow: 0 8px 32px rgba(0,30,60,0.4);
     }
     [data-theme="sunset"] {
-      --bg: #1a0e14; --bg2: #2a1320; --surface: #38182a; --surface2: #4a2038;
-      --accent: #ff9e7d; --accent2: #ff6b9d; --accent3: #ffb347; --gold: #ffd54f;
-      --text: #fff0f5; --muted: #b88a99; --strong: #ffffff;
-      --glass: rgba(255,158,125,0.06); --glass-strong: rgba(255,158,125,0.12); --glass-border: rgba(255,158,125,0.18);
+      --accent: #ff9e7d; --accent2: #ff6b9d; --accent3: #ffb347;
+      --accent-rgb: 255,158,125;
       --blob1: #ff6b9d; --blob2: #ffb347; --blob3: #ff9e7d;
-      --shadow: 0 8px 32px rgba(60,20,40,0.4);
     }
     [data-theme="forest"] {
-      --bg: #0a1612; --bg2: #0e2018; --surface: #122a20; --surface2: #1a3a2c;
-      --accent: #6ee7a8; --accent2: #2bb673; --accent3: #00e589; --gold: #ffd54f;
-      --text: #f0fff5; --muted: #7ab899; --strong: #ffffff;
-      --glass: rgba(110,231,168,0.06); --glass-strong: rgba(110,231,168,0.12); --glass-border: rgba(110,231,168,0.18);
+      --accent: #6ee7a8; --accent2: #2bb673; --accent3: #00e589;
+      --accent-rgb: 110,231,168;
       --blob1: #00e589; --blob2: #2bb673; --blob3: #6ee7a8;
-      --shadow: 0 8px 32px rgba(10,40,25,0.4);
     }
-    [data-theme="light"] {
-      --bg: #eef6fb; --bg2: #ffffff; --surface: #ffffff; --surface2: #dce8f0;
-      --accent: #0288d1; --accent2: #0277bd; --accent3: #039be5; --gold: #f9a825;
-      --text: #0a2540; --muted: #6a8299; --strong: #052338;
-      --glass: rgba(2,136,209,0.05); --glass-strong: rgba(2,136,209,0.09); --glass-border: rgba(2,136,209,0.18);
-      --blob1: #4fc3f7; --blob2: #29b6f6; --blob3: #81d4fa;
-      --shadow: 0 8px 32px rgba(2,80,140,0.12);
+    [data-theme="berry"] {
+      --accent: #c77dff; --accent2: #9d4edd; --accent3: #e0aaff;
+      --accent-rgb: 199,125,255;
+      --blob1: #e0aaff; --blob2: #9d4edd; --blob3: #c77dff;
     }
     [data-theme="custom"] {
-      --bg: #12001a; --bg2: #1a0824; --surface: #221030; --surface2: #2e1840;
-      --accent: #9c27b0; --accent2: #7b1fa2; --accent3: #ba68c8; --gold: #ffd54f;
-      --text: #f5f0ff; --muted: #9a8aaa; --strong: #ffffff;
-      --glass: rgba(156,39,176,0.06); --glass-strong: rgba(156,39,176,0.12); --glass-border: rgba(156,39,176,0.18);
+      --accent: #9c27b0; --accent2: #7b1fa2; --accent3: #ba68c8;
+      --accent-rgb: 156,39,176;
       --blob1: #ba68c8; --blob2: #7b1fa2; --blob3: #9c27b0;
-      --shadow: 0 8px 32px rgba(40,0,60,0.4);
     }
+
+    /* --- Dark mode surfaces (default) --- */
+    :root, [data-mode="dark"] {
+      --gold: #ffd54f;
+      --bg: #06121f; --bg2: #0a1a2e; --surface: #0f2238; --surface2: #15304a;
+      --text: #f0faff; --muted: #7a99b8; --strong: #ffffff;
+      --glass: rgba(var(--accent-rgb),0.06);
+      --glass-strong: rgba(var(--accent-rgb),0.12);
+      --glass-border: rgba(var(--accent-rgb),0.18);
+      --shadow: 0 8px 32px rgba(0,20,40,0.4);
+    }
+    /* Theme-tinted dark backgrounds */
+    [data-theme="sunset"][data-mode="dark"], [data-theme="sunset"]:not([data-mode]) { --bg: #1a0e14; --bg2: #2a1320; --surface: #38182a; --surface2: #4a2038; }
+    [data-theme="forest"][data-mode="dark"], [data-theme="forest"]:not([data-mode]) { --bg: #0a1612; --bg2: #0e2018; --surface: #122a20; --surface2: #1a3a2c; }
+    [data-theme="berry"][data-mode="dark"], [data-theme="berry"]:not([data-mode]) { --bg: #14081a; --bg2: #1d0e26; --surface: #261433; --surface2: #341a45; }
+    [data-theme="custom"][data-mode="dark"], [data-theme="custom"]:not([data-mode]) { --bg: #12001a; --bg2: #1a0824; --surface: #221030; --surface2: #2e1840; }
+
+    /* --- Light mode surfaces --- */
+    [data-mode="light"] {
+      --gold: #f9a825;
+      --bg: #eef4f9; --bg2: #ffffff; --surface: #ffffff; --surface2: #dde8f0;
+      --text: #12283d; --muted: #5e7588; --strong: #06203a;
+      --glass: rgba(var(--accent-rgb),0.07);
+      --glass-strong: rgba(var(--accent-rgb),0.13);
+      --glass-border: rgba(var(--accent-rgb),0.28);
+      --shadow: 0 8px 32px rgba(20,60,100,0.12);
+    }
+    [data-theme="sunset"][data-mode="light"] { --bg: #fdf0f2; --bg2: #ffffff; --surface: #ffffff; --surface2: #fbe0e6; }
+    [data-theme="forest"][data-mode="light"] { --bg: #eef9f1; --bg2: #ffffff; --surface: #ffffff; --surface2: #d8f0e0; }
+    [data-theme="berry"][data-mode="light"] { --bg: #f7eefc; --bg2: #ffffff; --surface: #ffffff; --surface2: #efe0fb; }
+    [data-theme="custom"][data-mode="light"] { --bg: #f6eefb; --bg2: #ffffff; --surface: #ffffff; --surface2: #ece0f5; }
+    /* In light mode, use darker accent variants for contrast on white */
+    [data-mode="light"][data-theme="ocean"] { --accent: #0288d1; --accent2: #0277bd; --accent3: #039be5; }
+    [data-mode="light"][data-theme="sunset"] { --accent: #e85d8a; --accent2: #d84368; --accent3: #f57c5c; }
+    [data-mode="light"][data-theme="forest"] { --accent: #1a9d5f; --accent2: #15823f; --accent3: #00b377; }
+    [data-mode="light"][data-theme="berry"] { --accent: #8e24aa; --accent2: #6a1b9a; --accent3: #ab47bc; }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { overscroll-behavior-y: none; }
@@ -78,13 +102,14 @@
     .blob-1 { width: 400px; height: 400px; background: radial-gradient(circle, var(--blob1), transparent 70%); top: -100px; left: -100px; animation: blob1 20s ease-in-out infinite; }
     .blob-2 { width: 300px; height: 300px; background: radial-gradient(circle, var(--blob2), transparent 70%); bottom: -50px; right: -50px; animation: blob2 25s ease-in-out infinite; }
     .blob-3 { width: 250px; height: 250px; background: radial-gradient(circle, var(--blob3), transparent 70%); top: 40%; left: 50%; transform: translate(-50%,-50%); animation: blob3 18s ease-in-out infinite; opacity: 0.15; }
-    [data-theme="light"] .blob { opacity: 0.18; mix-blend-mode: multiply; }
+    [data-mode="light"] .blob { opacity: 0.16; mix-blend-mode: multiply; }
     @keyframes blob1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(60px,80px) scale(1.2); } 66% { transform: translate(-30px,40px) scale(0.9); } }
     @keyframes blob2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-80px,-60px) scale(1.3); } }
     @keyframes blob3 { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(1.4); } }
 
     .bubbles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-    .bubble { position: absolute; bottom: -50px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), var(--glass) 40%, transparent 70%); border: 1px solid rgba(255,255,255,0.1); animation: bubbleRise linear infinite; opacity: 0; }
+    .bubble { position: absolute; bottom: -50px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.08) 45%, transparent 70%); border: 1px solid rgba(255,255,255,0.12); animation: bubbleRise linear infinite; opacity: 0; }
+    [data-mode="light"] .bubble { background: radial-gradient(circle at 30% 30%, rgba(0,80,140,0.18), rgba(0,80,140,0.05) 45%, transparent 70%); border: 1px solid rgba(0,80,140,0.1); }
     @keyframes bubbleRise { 0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 0.6; } 50% { transform: translateY(-50vh) translateX(20px); } 90% { opacity: 0.4; } 100% { transform: translateY(-110vh) translateX(-15px); opacity: 0; } }
 
     .caustics { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.4; background: radial-gradient(ellipse 600px 300px at 20% 30%, var(--glass), transparent), radial-gradient(ellipse 500px 250px at 80% 70%, var(--glass), transparent); animation: causticShift 15s ease-in-out infinite; }
@@ -360,7 +385,7 @@
     .summary-close { padding: 14px 40px; background: linear-gradient(135deg, var(--accent3), var(--accent2)); border: none; border-radius: 100px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body data-theme="ocean">
+<body data-theme="ocean" data-mode="dark">
 <audio id="plopAudio" preload="auto" playsinline>
   <source src="data:audio/wav;base64,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" type="audio/wav">
 </audio>
@@ -588,16 +613,21 @@
   <div class="modal-content">
 
     <div class="modal-section">
-      <div class="modal-section-title">Design / Theme</div>
+      <div class="modal-section-title">Hell / Dunkel</div>
+      <div class="pill-row" id="modeRow">
+        <button class="pill-btn" data-mode="light" onclick="setMode('light')">☀️ Hell</button>
+        <button class="pill-btn" data-mode="dark" onclick="setMode('dark')">🌙 Dunkel</button>
+        <button class="pill-btn" data-mode="auto" onclick="setMode('auto')">🌗 Auto</button>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Farbthema</div>
       <div class="theme-grid" id="themeGrid"></div>
       <div id="customThemeRow" style="display:none; margin-top:12px;">
         <div class="setting-row">
-          <div class="info"><div class="setting-label">Akzentfarbe</div><div class="setting-sub">Hauptfarbe der App</div></div>
-          <input type="color" id="customAccent" value="#9c27b0" onchange="updateCustomColor('accent', this.value)" style="width:48px; height:36px; border:none; border-radius:10px; background:none; cursor:pointer;">
-        </div>
-        <div class="setting-row">
-          <div class="info"><div class="setting-label">Hintergrund</div><div class="setting-sub">Dunkler Basis-Ton</div></div>
-          <input type="color" id="customBg" value="#12001a" onchange="updateCustomColor('bg', this.value)" style="width:48px; height:36px; border:none; border-radius:10px; background:none; cursor:pointer;">
+          <div class="info"><div class="setting-label">Akzentfarbe wählen</div><div class="setting-sub">Hell/Dunkel passt sich automatisch an</div></div>
+          <input type="color" id="customAccent" value="#9c27b0" onchange="updateCustomColor(this.value)" style="width:48px; height:36px; border:none; border-radius:10px; background:none; cursor:pointer;">
         </div>
       </div>
     </div>
@@ -719,7 +749,7 @@
     </div>
 
     <div class="modal-section" style="text-align:center; font-size: 11px; color: var(--muted); opacity: 0.6;">
-      Hydro v2.1 · Made with 💧
+      Hydro v2.3 · Made with 💧
     </div>
   </div>
 </div>
@@ -745,12 +775,11 @@ const DEFAULT_QUICK = [
 ];
 
 const THEMES = [
-  { id: 'ocean', name: 'Ozean', c1: '#00e5ff', c2: '#06121f' },
-  { id: 'sunset', name: 'Sonnenuntergang', c1: '#ff6b9d', c2: '#1a0e14' },
-  { id: 'forest', name: 'Wald', c1: '#00e589', c2: '#0a1612' },
-  { id: 'light', name: 'Hell', c1: '#039be5', c2: '#eef6fb' },
-  { id: 'auto', name: 'Auto (Tag/Nacht)', c1: '#039be5', c2: '#06121f' },
-  { id: 'custom', name: 'Eigenes', c1: '#9c27b0', c2: '#12001a' }
+  { id: 'ocean', name: 'Ozean', c1: '#00e5ff', c2: '#2196f3' },
+  { id: 'sunset', name: 'Sonnenuntergang', c1: '#ffb347', c2: '#ff6b9d' },
+  { id: 'forest', name: 'Wald', c1: '#00e589', c2: '#2bb673' },
+  { id: 'berry', name: 'Beere', c1: '#e0aaff', c2: '#9d4edd' },
+  { id: 'custom', name: 'Eigenes', c1: '#ba68c8', c2: '#7b1fa2' }
 ];
 
 const TIPS = [
@@ -803,7 +832,8 @@ const ACHIEVEMENTS = [
 let root = {
   activeProfile: 'default',
   theme: 'ocean',
-  customTheme: { accent: '#9c27b0', accent2: '#7b1fa2', accent3: '#ba68c8', bg: '#12001a' },
+  mode: 'dark',          // 'dark' | 'light' | 'auto'
+  customAccent: '#9c27b0',
   tipIndex: 0,
   summaryEnabled: true,
   summaryShownDate: '',
@@ -879,6 +909,13 @@ function loadRoot() {
   if (!root.profiles[root.activeProfile]) {
     root.activeProfile = Object.keys(root.profiles)[0];
   }
+  // Migrate old theme model (light/auto were themes) → theme + mode
+  if (root.theme === 'light') { root.theme = 'ocean'; root.mode = 'light'; }
+  if (root.theme === 'auto') { root.theme = 'ocean'; root.mode = 'auto'; }
+  if (!root.mode) root.mode = 'dark';
+  if (!root.customAccent) root.customAccent = '#9c27b0';
+  if (!THEMES.find(t => t.id === root.theme)) root.theme = 'ocean';
+
   state = root.profiles[root.activeProfile];
   // ensure fields
   if (!state.quickButtons) state.quickButtons = JSON.parse(JSON.stringify(DEFAULT_QUICK));
@@ -923,58 +960,77 @@ function save() {
   localStorage.setItem('hydro_root', JSON.stringify(root));
 }
 
-function resolveTheme() {
-  // returns the actual theme to apply (handles 'auto')
-  if (root.theme === 'auto') {
+function resolveMode() {
+  if (root.mode === 'auto') {
     const h = new Date().getHours();
-    return (h >= 7 && h < 19) ? 'light' : 'ocean';
+    return (h >= 7 && h < 19) ? 'light' : 'dark';
   }
-  return root.theme;
+  return root.mode || 'dark';
 }
 
 function applyTheme() {
-  const actual = resolveTheme();
-  if (actual === 'custom') {
-    const c = root.customTheme;
-    const r = document.documentElement;
-    const lighten = (hex, amt) => {
-      const n = parseInt(hex.slice(1), 16);
-      let rr = Math.min(255, (n >> 16) + amt), gg = Math.min(255, ((n >> 8) & 255) + amt), bb = Math.min(255, (n & 255) + amt);
-      return `rgb(${rr},${gg},${bb})`;
-    };
-    document.body.setAttribute('data-theme', 'custom');
-    r.style.setProperty('--accent', c.accent);
-    r.style.setProperty('--accent2', c.accent2);
-    r.style.setProperty('--accent3', c.accent3);
-    r.style.setProperty('--gold', '#ffd54f');
-    r.style.setProperty('--bg', c.bg);
-    r.style.setProperty('--bg2', lighten(c.bg, 12));
-    r.style.setProperty('--surface', lighten(c.bg, 18));
-    r.style.setProperty('--surface2', lighten(c.bg, 32));
-    r.style.setProperty('--text', '#f5f0ff');
-    r.style.setProperty('--muted', '#9a8aaa');
-    r.style.setProperty('--strong', '#ffffff');
-    const glassRGB = hexToRgb(c.accent);
-    r.style.setProperty('--glass', `rgba(${glassRGB},0.06)`);
-    r.style.setProperty('--glass-strong', `rgba(${glassRGB},0.12)`);
-    r.style.setProperty('--glass-border', `rgba(${glassRGB},0.18)`);
-    r.style.setProperty('--blob1', c.accent3);
-    r.style.setProperty('--blob2', c.accent2);
-    r.style.setProperty('--blob3', c.accent);
-    document.getElementById('themeColorMeta').setAttribute('content', c.bg);
-  } else {
-    // clear inline custom props
-    const r = document.documentElement;
-    ['--accent','--accent2','--accent3','--gold','--bg','--bg2','--surface','--surface2','--text','--muted','--strong','--glass','--glass-strong','--glass-border','--blob1','--blob2','--blob3'].forEach(p => r.style.removeProperty(p));
-    document.body.setAttribute('data-theme', actual);
-    const colors = { ocean: '#06121f', sunset: '#1a0e14', forest: '#0a1612', light: '#eef6fb' };
-    document.getElementById('themeColorMeta').setAttribute('content', colors[actual] || '#06121f');
-  }
-}
+  const mode = resolveMode();
+  document.body.setAttribute('data-theme', root.theme);
+  document.body.setAttribute('data-mode', mode);
 
-function hexToRgb(hex) {
-  const n = parseInt(hex.slice(1), 16);
-  return `${n >> 16},${(n >> 8) & 255},${n & 255}`;
+  const r = document.documentElement;
+  const customProps = ['--accent','--accent2','--accent3','--accent-rgb','--blob1','--blob2','--blob3',
+    '--bg','--bg2','--surface','--surface2','--text','--muted','--strong',
+    '--glass','--glass-strong','--glass-border','--shadow'];
+  // Always clear custom overrides first
+  customProps.forEach(p => r.style.removeProperty(p));
+
+  if (root.theme === 'custom') {
+    const base = root.customAccent;
+    const n = parseInt(base.slice(1), 16);
+    const rr = n >> 16, gg = (n >> 8) & 255, bb = n & 255;
+    const clamp = v => Math.max(0, Math.min(255, Math.round(v)));
+    const hx = (a,b,c) => `#${clamp(a).toString(16).padStart(2,'0')}${clamp(b).toString(16).padStart(2,'0')}${clamp(c).toString(16).padStart(2,'0')}`;
+    const mix = (a, b, t) => a + (b - a) * t; // toward b by t
+
+    if (mode === 'light') {
+      const main = hx(rr-50, gg-50, bb-50);
+      r.style.setProperty('--accent', main);
+      r.style.setProperty('--accent2', hx(rr-80, gg-80, bb-80));
+      r.style.setProperty('--accent3', hx(rr-20, gg-20, bb-20));
+      r.style.setProperty('--accent-rgb', `${rr},${gg},${bb}`);
+      r.style.setProperty('--blob1', base);
+      r.style.setProperty('--blob2', hx(rr-40,gg-40,bb-40));
+      r.style.setProperty('--blob3', hx(rr+30,gg+30,bb+30));
+      // light tinted surfaces: very light version of accent
+      r.style.setProperty('--bg', hx(mix(rr,255,0.92), mix(gg,255,0.92), mix(bb,255,0.92)));
+      r.style.setProperty('--bg2', '#ffffff');
+      r.style.setProperty('--surface', '#ffffff');
+      r.style.setProperty('--surface2', hx(mix(rr,255,0.82), mix(gg,255,0.82), mix(bb,255,0.82)));
+      r.style.setProperty('--text', hx(mix(rr,0,0.75), mix(gg,0,0.75), mix(bb,0,0.75)));
+      r.style.setProperty('--muted', hx(mix(rr,128,0.5), mix(gg,128,0.5), mix(bb,128,0.5)));
+      r.style.setProperty('--strong', '#101820');
+    } else {
+      const main = base;
+      r.style.setProperty('--accent', main);
+      r.style.setProperty('--accent2', hx(rr-30, gg-30, bb-30));
+      r.style.setProperty('--accent3', hx(rr+40, gg+40, bb+40));
+      r.style.setProperty('--accent-rgb', `${rr},${gg},${bb}`);
+      r.style.setProperty('--blob1', hx(rr+40,gg+40,bb+40));
+      r.style.setProperty('--blob2', hx(rr-30,gg-30,bb-30));
+      r.style.setProperty('--blob3', main);
+      // dark tinted surfaces: very dark version of accent hue
+      r.style.setProperty('--bg', hx(mix(rr,0,0.93), mix(gg,0,0.93), mix(bb,0,0.93)));
+      r.style.setProperty('--bg2', hx(mix(rr,0,0.88), mix(gg,0,0.88), mix(bb,0,0.88)));
+      r.style.setProperty('--surface', hx(mix(rr,0,0.84), mix(gg,0,0.84), mix(bb,0,0.84)));
+      r.style.setProperty('--surface2', hx(mix(rr,0,0.74), mix(gg,0,0.74), mix(bb,0,0.74)));
+      r.style.setProperty('--text', '#f5f8ff');
+      r.style.setProperty('--muted', hx(mix(rr,128,0.45), mix(gg,128,0.45), mix(bb,128,0.45)));
+      r.style.setProperty('--strong', '#ffffff');
+    }
+    r.style.setProperty('--glass', `rgba(${rr},${gg},${bb},0.07)`);
+    r.style.setProperty('--glass-strong', `rgba(${rr},${gg},${bb},0.13)`);
+    r.style.setProperty('--glass-border', `rgba(${rr},${gg},${bb},${mode==='light'?0.28:0.2})`);
+    r.style.setProperty('--shadow', mode==='light' ? '0 8px 32px rgba(20,60,100,0.12)' : '0 8px 32px rgba(0,0,0,0.4)');
+  }
+
+  const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
+  document.getElementById('themeColorMeta').setAttribute('content', bg || '#06121f');
 }
 
 // === Effective hydration ===
@@ -1060,8 +1116,8 @@ function render() {
   }
   document.querySelectorAll('.theme-option').forEach(el => el.classList.toggle('selected', el.dataset.themeId === root.theme));
   document.getElementById('customThemeRow').style.display = (root.theme === 'custom') ? 'block' : 'none';
-  document.getElementById('customAccent').value = root.customTheme.accent;
-  document.getElementById('customBg').value = root.customTheme.bg;
+  document.getElementById('customAccent').value = root.customAccent;
+  document.querySelectorAll('.pill-btn[data-mode]').forEach(b => b.classList.toggle('active', b.dataset.mode === root.mode));
 
   // qb config
   renderQbConfig();
@@ -1339,20 +1395,16 @@ function updateAvatarMood(pct) {
 function selectTheme(id) {
   root.theme = id; save(); render(); haptic();
   document.getElementById('customThemeRow').style.display = (id === 'custom') ? 'block' : 'none';
-  showToast(id === 'auto' ? 'Auto-Theme: wechselt Tag/Nacht' : 'Theme geändert');
+  showToast('Theme geändert');
 }
-function updateCustomColor(key, val) {
-  root.customTheme[key] = val;
-  // derive accent2/accent3 from accent if main accent changed
-  if (key === 'accent') {
-    const n = parseInt(val.slice(1), 16);
-    const darker = `#${Math.max(0,(n>>16)-30).toString(16).padStart(2,'0')}${Math.max(0,((n>>8)&255)-30).toString(16).padStart(2,'0')}${Math.max(0,(n&255)-30).toString(16).padStart(2,'0')}`;
-    const lighter = `#${Math.min(255,(n>>16)+40).toString(16).padStart(2,'0')}${Math.min(255,((n>>8)&255)+40).toString(16).padStart(2,'0')}${Math.min(255,(n&255)+40).toString(16).padStart(2,'0')}`;
-    root.customTheme.accent2 = darker;
-    root.customTheme.accent3 = lighter;
-  }
+function setMode(m) {
+  root.mode = m; save(); render(); haptic();
+  showToast(m === 'auto' ? 'Auto: Tag hell, Nacht dunkel' : (m === 'light' ? 'Heller Modus' : 'Dunkler Modus'));
+}
+function updateCustomColor(val) {
+  root.customAccent = val;
   save();
-  if (resolveTheme() === 'custom') applyTheme();
+  applyTheme();
 }
 
 function resetDay() {
