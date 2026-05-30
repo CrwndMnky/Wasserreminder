@@ -62,10 +62,10 @@
       --shadow: 0 8px 32px rgba(0,20,40,0.4);
     }
     /* Theme-tinted dark backgrounds */
-    [data-theme="sunset"][data-mode="dark"], [data-theme="sunset"]:not([data-mode]) { --bg: #1a0e14; --bg2: #2a1320; --surface: #38182a; --surface2: #4a2038; --gold: #ffb74d; }
-    [data-theme="forest"][data-mode="dark"], [data-theme="forest"]:not([data-mode]) { --bg: #0a1612; --bg2: #0e2018; --surface: #122a20; --surface2: #1a3a2c; --gold: #d4e157; }
-    [data-theme="berry"][data-mode="dark"], [data-theme="berry"]:not([data-mode]) { --bg: #14081a; --bg2: #1d0e26; --surface: #261433; --surface2: #341a45; --gold: #f0a6c8; }
-    [data-theme="custom"][data-mode="dark"], [data-theme="custom"]:not([data-mode]) { --bg: #12001a; --bg2: #1a0824; --surface: #221030; --surface2: #2e1840; --gold: #e0a8d8; }
+    [data-theme="sunset"][data-mode="dark"], [data-theme="sunset"]:not([data-mode]) { --gold: #ffb74d; --bg: #1a0e14; --bg2: #2a1320; --surface: #38182a; --surface2: #4a2038; }
+    [data-theme="forest"][data-mode="dark"], [data-theme="forest"]:not([data-mode]) { --gold: #d4e157; --bg: #0a1612; --bg2: #0e2018; --surface: #122a20; --surface2: #1a3a2c; }
+    [data-theme="berry"][data-mode="dark"], [data-theme="berry"]:not([data-mode]) { --gold: #f0a6c8; --bg: #14081a; --bg2: #1d0e26; --surface: #261433; --surface2: #341a45; }
+    [data-theme="custom"][data-mode="dark"], [data-theme="custom"]:not([data-mode]) { --gold: #e0a8d8; --bg: #12001a; --bg2: #1a0824; --surface: #221030; --surface2: #2e1840; }
 
     /* --- Light mode surfaces --- */
     [data-mode="light"] {
@@ -77,10 +77,10 @@
       --glass-border: rgba(var(--accent-rgb),0.28);
       --shadow: 0 8px 32px rgba(20,60,100,0.12);
     }
-    [data-theme="sunset"][data-mode="light"] { --bg: #fdf0f2; --bg2: #ffffff; --surface: #ffffff; --surface2: #fbe0e6; --gold: #f57c00; }
-    [data-theme="forest"][data-mode="light"] { --bg: #eef9f1; --bg2: #ffffff; --surface: #ffffff; --surface2: #d8f0e0; --gold: #9e9d24; }
-    [data-theme="berry"][data-mode="light"] { --bg: #f7eefc; --bg2: #ffffff; --surface: #ffffff; --surface2: #efe0fb; --gold: #c2185b; }
-    [data-theme="custom"][data-mode="light"] { --bg: #f6eefb; --bg2: #ffffff; --surface: #ffffff; --surface2: #ece0f5; --gold: #ab2f9e; }
+    [data-theme="sunset"][data-mode="light"] { --gold: #f57c00; --bg: #fdf0f2; --bg2: #ffffff; --surface: #ffffff; --surface2: #fbe0e6; }
+    [data-theme="forest"][data-mode="light"] { --gold: #9e9d24; --bg: #eef9f1; --bg2: #ffffff; --surface: #ffffff; --surface2: #d8f0e0; }
+    [data-theme="berry"][data-mode="light"] { --gold: #c2185b; --bg: #f7eefc; --bg2: #ffffff; --surface: #ffffff; --surface2: #efe0fb; }
+    [data-theme="custom"][data-mode="light"] { --gold: #ab2f9e; --bg: #f6eefb; --bg2: #ffffff; --surface: #ffffff; --surface2: #ece0f5; }
     /* In light mode, use darker accent variants for contrast on white */
     [data-mode="light"][data-theme="ocean"] { --accent: #0288d1; --accent2: #0277bd; --accent3: #039be5; }
     [data-mode="light"][data-theme="sunset"] { --accent: #e85d8a; --accent2: #d84368; --accent3: #f57c5c; }
@@ -194,13 +194,13 @@
     .quick-btn .factor-tag { position: absolute; top: 6px; right: 7px; font-size: 8px; color: var(--muted); font-weight: 600; }
 
     .custom-add-wrap { margin-bottom: 20px; }
-    .custom-type-full { width: 100%; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px 14px 0 0; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; padding: 12px 14px; font-weight: 500; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a99b8' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+    .custom-type-full { width: 100%; background: var(--glass); border: 1px solid var(--glass-border); border-top: none; border-radius: 0; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; padding: 12px 14px; font-weight: 500; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a99b8' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
     .custom-type-full:focus { outline: none; border-color: var(--accent); }
-    .type-hint { font-size: 11px; color: var(--muted); padding: 6px 14px 8px; background: var(--glass); border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); line-height: 1.4; }
+    .type-hint { font-size: 11px; color: var(--muted); padding: 6px 14px 10px; background: var(--glass); border: 1px solid var(--glass-border); border-top: none; border-radius: 0 0 14px 14px; line-height: 1.4; }
     .type-hint strong { color: var(--accent); font-weight: 600; }
     .custom-add { display: flex; gap: 0; }
-    .custom-add .custom-input { border-radius: 0 0 0 14px; border-right: none; }
-    .custom-add .custom-btn { border-radius: 0 0 14px 0; }
+    .custom-add .custom-input { border-radius: 14px 0 0 0; border-right: none; }
+    .custom-add .custom-btn { border-radius: 0 14px 0 0; }
     .custom-input { flex: 1; min-width: 0; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif;  }
     .custom-input::placeholder { color: var(--muted); }
     .custom-input:focus { outline: none; border-color: var(--accent); }
@@ -227,7 +227,7 @@
     .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; cursor: pointer; }
     .chart-bar-container { flex: 1; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
     .chart-bar { width: 100%; max-width: 26px; background: linear-gradient(180deg, var(--accent3), var(--accent2)); border-radius: 6px 6px 2px 2px; min-height: 4px; transition: height 0.6s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 0 8px var(--glass-strong); }
-    .chart-bar.today { background: linear-gradient(180deg, var(--gold), color-mix(in srgb, var(--gold) 65%, #b36b00)); box-shadow: 0 0 12px color-mix(in srgb, var(--gold) 50%, transparent); }
+    .chart-bar.today { background: linear-gradient(180deg, var(--gold), color-mix(in srgb, var(--gold) 75%, #c77800)); box-shadow: 0 0 12px color-mix(in srgb, var(--gold) 50%, transparent); }
     .chart-bar.under { background: linear-gradient(180deg, var(--surface2), var(--surface)); box-shadow: none; }
     .chart-bar.under.has-data { background: linear-gradient(180deg, var(--glass-strong), var(--glass)); }
     .chart-label { font-size: 10px; color: var(--muted); font-weight: 500; }
@@ -326,8 +326,8 @@
     .log-add-row input, .log-add-row select { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px 10px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; }
     .log-add-row input:focus, .log-add-row select:focus { outline: none; border-color: var(--accent); }
     .log-add-row .log-ml { flex: 1; min-width: 0; }
-    .log-add-row .log-tm { width: 92px; }
-    .log-add-row .log-ty { width: 56px; text-align: center; font-size: 18px; }
+    .log-add-row .log-tm { width: 84px; flex-shrink: 0; }
+    .log-add-row .log-ty { flex: 1.3; min-width: 0; font-size: 13px; }
     .log-add-row .log-add-btn { width: 44px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--accent3), var(--accent2)); border: none; color: white; font-size: 22px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .log-add-btn:active { transform: scale(0.92); }
     .log-total { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
@@ -391,6 +391,19 @@
     .ring-ripple { position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--accent3); pointer-events: none; animation: ringRipple 0.8s ease-out forwards; }
 
     .achievement-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.5); background: linear-gradient(135deg, rgba(255,213,79,0.95), rgba(255,152,0,0.9)); border-radius: 24px; padding: 24px 32px; z-index: 400; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1); text-align: center; box-shadow: 0 20px 60px rgba(255,152,0,0.4); border: 2px solid rgba(255,255,255,0.3); }
+    .ach-info-overlay { position: fixed; inset: 0; z-index: 450; background: rgba(0,10,20,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    .ach-info-overlay.visible { opacity: 1; pointer-events: auto; }
+    .ach-info-card { width: 100%; max-width: 320px; background: var(--surface); border: 1px solid var(--glass-border); border-radius: 24px; padding: 28px 24px 22px; text-align: center; box-shadow: var(--shadow); transform: scale(0.85); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    .ach-info-overlay.visible .ach-info-card { transform: scale(1); }
+    .ach-info-emoji { font-size: 56px; line-height: 1; margin-bottom: 12px; }
+    .ach-info-card.locked .ach-info-emoji { filter: grayscale(1) opacity(0.45); }
+    .ach-info-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--strong); margin-bottom: 6px; }
+    .ach-info-status { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .ach-info-status.unlocked { color: var(--gold); }
+    .ach-info-status.locked { color: var(--muted); }
+    .ach-info-desc { font-size: 14px; color: var(--text); line-height: 1.5; margin-bottom: 20px; }
+    .ach-info-close { width: 100%; padding: 12px; border: none; border-radius: 14px; background: linear-gradient(135deg, var(--accent3), var(--accent2)); color: white; font-weight: 600; font-size: 14px; font-family: 'Inter', sans-serif; cursor: pointer; }
+    .ach-info-close:active { transform: scale(0.96); }
     .achievement-toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
     .achievement-toast .at-emoji { font-size: 60px; margin-bottom: 8px; line-height: 1; }
     .achievement-toast .at-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
@@ -426,6 +439,17 @@
   <div class="at-emoji" id="atEmoji">🏆</div>
   <div class="at-title" id="atTitle"></div>
   <div class="at-sub" id="atSub"></div>
+</div>
+
+<!-- Achievement info card -->
+<div class="ach-info-overlay" id="achInfoOverlay" onclick="closeAchInfo()">
+  <div class="ach-info-card" id="achInfoCard" onclick="event.stopPropagation()">
+    <div class="ach-info-emoji" id="achInfoEmoji">🏆</div>
+    <div class="ach-info-name" id="achInfoName"></div>
+    <div class="ach-info-status" id="achInfoStatus"></div>
+    <div class="ach-info-desc" id="achInfoDesc"></div>
+    <button class="ach-info-close" onclick="closeAchInfo()">Schließen</button>
+  </div>
 </div>
 
 <!-- Daily summary -->
@@ -527,12 +551,12 @@
   <div class="quick-add" id="quickAdd"></div>
 
   <div class="custom-add-wrap">
-    <select class="custom-type-full" id="customType" onchange="updateTypeHint()"></select>
-    <div class="type-hint" id="typeHint"></div>
     <div class="custom-add">
       <input type="number" class="custom-input" id="customInput" placeholder="Eigene Menge in ml" inputmode="numeric">
       <button class="custom-btn" onclick="addCustom()">+ Hinzufügen</button>
     </div>
+    <select class="custom-type-full" id="customType" onchange="updateTypeHint()"></select>
+    <div class="type-hint" id="typeHint"></div>
   </div>
 
   <div class="undo-bar" id="undoBar">
@@ -905,6 +929,15 @@ let reminderTimer = null, undoTimer = null, audioCtx = null, audioUnlocked = fal
 
 function getToday() { return new Date().toISOString().split('T')[0]; }
 
+// Lokaler Wochenschlüssel = Datum des Montags dieser Woche. Sa & der folgende So teilen denselben Schlüssel.
+function weekKeyOf(d) {
+  const x = new Date(d);
+  const day = x.getDay();
+  x.setDate(x.getDate() + (day === 0 ? -6 : 1 - day));
+  const p = n => String(n).padStart(2, '0');
+  return `${x.getFullYear()}-${p(x.getMonth()+1)}-${p(x.getDate())}`;
+}
+
 // Audio unlock for iOS
 function unlockAudio() {
   if (audioUnlocked) return;
@@ -1014,6 +1047,9 @@ function resolveMode() {
 
 function applyTheme() {
   const mode = resolveMode();
+  const sig = root.theme + '|' + mode + '|' + (root.theme === 'custom' ? root.customAccent : '');
+  if (applyTheme._sig === sig) return; // unverändert → teures Recalc überspringen
+  applyTheme._sig = sig;
   document.body.setAttribute('data-theme', root.theme);
   document.body.setAttribute('data-mode', mode);
 
@@ -1118,16 +1154,26 @@ function render() {
   if (boost > 0) { badge.style.display = 'inline'; badge.textContent = `🔥 +${boost} ml Hitze`; }
   else badge.style.display = 'none';
 
-  // streak
+  // streak — pro Wochentag aus echten Tagesdaten dieser Woche ableiten
   const streakRow = document.getElementById('streakRow');
   streakRow.innerHTML = '';
-  const todayIdx = new Date().getDay();
-  for (let i = 1; i <= 7; i++) {
-    const idx = i % 7;
+  const nowS = new Date();
+  const todayIdx = nowS.getDay();
+  const monday = new Date(nowS);
+  monday.setDate(nowS.getDate() + (todayIdx === 0 ? -6 : 1 - todayIdx)); // Montag dieser Woche
+  const todayKey = getToday();
+  for (let i = 0; i < 7; i++) { // Mo..So
+    const d = new Date(monday); d.setDate(monday.getDate() + i);
+    const idx = d.getDay();
+    const key = d.toISOString().split('T')[0];
+    const isToday = key === todayKey;
+    const isFuture = !isToday && d > nowS;
+    let amount, goal;
+    if (isToday) { amount = state.amount; goal = state.goal; }
+    else { const h = state.dailyHistory[key]; amount = h?.amount || 0; goal = h?.goal || state.baseGoal; }
+    const isActive = !isFuture && amount > 0 && amount >= goal;
     const day = document.createElement('div'); day.className = 'streak-day';
     const dot = document.createElement('div');
-    const isToday = idx === todayIdx;
-    const isActive = state.streak[idx] || (isToday && state.amount >= state.goal);
     dot.className = 'streak-dot' + (isActive ? ' active' : '') + (isToday ? ' today' : '');
     dot.textContent = DAYS[idx];
     day.appendChild(dot); streakRow.appendChild(day);
@@ -1290,8 +1336,20 @@ function renderAchievements() {
 function showAchInfo(id) {
   const a = ACHIEVEMENTS.find(x => x.id === id);
   if (!a) return;
-  showToast(`${a.emoji} ${a.name} — ${state.achievements[id] ? '✓ ' : ''}${a.desc}`);
+  const unlocked = !!state.achievements[id];
+  document.getElementById('achInfoEmoji').textContent = a.emoji;
+  document.getElementById('achInfoName').textContent = a.name;
+  const status = document.getElementById('achInfoStatus');
+  status.textContent = unlocked ? '✓ Freigeschaltet' : '🔒 Noch gesperrt';
+  status.className = 'ach-info-status ' + (unlocked ? 'unlocked' : 'locked');
+  document.getElementById('achInfoDesc').textContent = a.desc;
+  document.getElementById('achInfoCard').classList.toggle('locked', !unlocked);
+  document.getElementById('achInfoOverlay').classList.add('visible');
   haptic();
+}
+
+function closeAchInfo() {
+  document.getElementById('achInfoOverlay').classList.remove('visible');
 }
 
 function checkAchievements() {
@@ -1338,12 +1396,13 @@ function addWater(raw, type, btn) {
   if (!state.flags.typesToday) state.flags.typesToday = [];
   if (!state.flags.typesToday.includes(type)) state.flags.typesToday.push(type);
   if (state.flags.typesToday.length >= 4) state.flags.variety = true;
-  // weekend: both Sat and Sun goals met this week
+  // weekend: Sa & So derselben Woche beide Ziele erreicht
   const dow = new Date().getDay();
   if ((dow === 6 || dow === 0) && state.amount >= state.goal) {
-    if (!state.flags.weekendDays) state.flags.weekendDays = {};
-    state.flags.weekendDays[dow] = getToday();
-    if (state.flags.weekendDays[6] && state.flags.weekendDays[0]) state.flags.weekend = true;
+    const wk = weekKeyOf(new Date());
+    if (state.flags.weekendWeek !== wk) { state.flags.weekendWeek = wk; state.flags.weekendSat = false; state.flags.weekendSun = false; }
+    if (dow === 6) state.flags.weekendSat = true; else state.flags.weekendSun = true;
+    if (state.flags.weekendSat && state.flags.weekendSun) state.flags.weekend = true;
   }
   // comeback: reached goal after a gap of 2+ days without activity
   if (state.amount >= state.goal && state.lastGapDays >= 2) state.flags.comeback = true;
@@ -1598,7 +1657,7 @@ function openLogForDate(dateKey) {
   const now = new Date();
   document.getElementById('logTime').value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
   const lt = document.getElementById('logType');
-  if (!lt.dataset.built) { lt.innerHTML = Object.entries(DRINK_TYPES).map(([k,v]) => `<option value="${k}">${v.e}</option>`).join(''); lt.dataset.built = '1'; }
+  if (!lt.dataset.built) { lt.innerHTML = Object.entries(DRINK_TYPES).map(([k,v]) => `<option value="${k}">${v.e} ${v.n} · ${Math.round(v.f*100)}%</option>`).join(''); lt.dataset.built = '1'; }
   renderLog(); haptic();
 }
 
