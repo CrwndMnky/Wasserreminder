@@ -351,7 +351,15 @@
 
     .edit-profile-overlay { position: fixed; inset: 0; background: rgba(0,12,24,0.8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); z-index: 150; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .edit-profile-overlay.visible { opacity: 1; pointer-events: all; }
-    .edit-profile-card { background: linear-gradient(180deg, var(--bg2), var(--surface)); border: 1px solid var(--glass-border); border-radius: 24px; padding: 24px; width: 100%; max-width: 360px; box-shadow: var(--shadow); }
+    .edit-profile-card { background: linear-gradient(180deg, var(--bg2), var(--surface)); border: 1px solid var(--glass-border); border-radius: 24px; padding: 24px; width: 100%; max-width: 360px; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow); }
+    .body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .body-field { display: flex; flex-direction: column; gap: 4px; }
+    .body-field span { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+    .body-field input, .body-field select { width: 100%; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px 12px; color: var(--text); font-family: 'Inter', sans-serif; }
+    .body-field input:focus, .body-field select:focus { outline: none; border-color: var(--accent); }
+    .body-field select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath fill='%237a99b8' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+    .body-hint { font-size: 12px; color: var(--muted); line-height: 1.45; margin-bottom: 16px; }
+    .body-hint strong { color: var(--accent); font-weight: 600; }
     .edit-profile-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; color: var(--strong); margin-bottom: 18px; text-align: center; }
     .edit-label { display: block; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
     .edit-name-input { width: 100%; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 14px; color: var(--text); font-family: 'Inter', sans-serif; margin-bottom: 18px; }
@@ -641,6 +649,40 @@
     <input type="text" id="editProfileName" class="edit-name-input" maxlength="20" placeholder="Name">
     <label class="edit-label">Avatar</label>
     <div class="edit-avatar-grid" id="editAvatarGrid"></div>
+    <label class="edit-label">Körperdaten (für Wasserbedarf)</label>
+    <div class="body-grid">
+      <div class="body-field">
+        <span>Geschlecht</span>
+        <select id="editSex" onchange="onSexChange()">
+          <option value="">–</option>
+          <option value="m">Männlich</option>
+          <option value="f">Weiblich</option>
+          <option value="d">Divers</option>
+        </select>
+      </div>
+      <div class="body-field">
+        <span>Alter</span>
+        <input type="number" id="editAge" inputmode="numeric" placeholder="Jahre" min="1" max="120" oninput="updateBodyHint()">
+      </div>
+      <div class="body-field">
+        <span>Größe</span>
+        <input type="number" id="editHeight" inputmode="numeric" placeholder="cm" min="50" max="250" oninput="updateBodyHint()">
+      </div>
+      <div class="body-field">
+        <span>Gewicht</span>
+        <input type="number" id="editWeight" inputmode="numeric" placeholder="kg" min="20" max="300" oninput="updateBodyHint()">
+      </div>
+    </div>
+    <div class="body-field" id="pregnancyField" style="display:none; margin-bottom:12px;">
+      <span>Schwangerschaft / Stillzeit</span>
+      <select id="editPregnancy" onchange="updateBodyHint()">
+        <option value="">Keine</option>
+        <option value="pregnant">Schwanger (+300 ml)</option>
+        <option value="nursing">Stillend (+700 ml)</option>
+      </select>
+    </div>
+    <button class="secondary-btn" style="margin:0 0 8px;" onclick="applyComputedGoal()">💧 Wasserbedarf berechnen</button>
+    <div class="body-hint" id="bodyNeedHint"></div>
     <div class="edit-profile-actions">
       <button class="secondary-btn" style="margin:0;" onclick="closeEditProfile()">Abbrechen</button>
       <button class="primary-btn" onclick="saveProfileEdit()">Speichern</button>
@@ -912,6 +954,7 @@ function freshProfile(name, avatar) {
   return {
     name: name || 'Ich',
     avatar: avatar || '💧',
+    sex: '', age: null, height: null, weight: null, pregnancy: '',
     today: '', amount: 0, drinks: 0, goal: 2000, baseGoal: 2000,
     interval: 60, calInterval: 60, reminderOn: false,
     windowStart: '08:00', windowEnd: '22:00',
@@ -1008,7 +1051,7 @@ function rolloverDay() {
   const today = getToday();
   if (state.today !== today) {
     if (state.today) {
-      state.dailyHistory[state.today] = { amount: state.amount, goal: state.goal, drinks: state.drinks };
+      state.dailyHistory[state.today] = { amount: state.amount, goal: state.goal, drinks: state.drinks, entries: [...(state.history || [])] };
       // gap tracking for comeback achievement
       const lastDate = new Date(state.today);
       const nowDate = new Date(today);
@@ -1574,6 +1617,12 @@ function editProfile(id) {
     `<div class="edit-avatar-option ${a.e === p.avatar ? 'selected' : ''}" data-av="${a.e}" onclick="pickEditAvatar(this)">${a.e}</div>`
   ).join('');
   document.getElementById('editProfileOverlay').classList.add('visible');
+  document.getElementById('editSex').value = p.sex || '';
+  document.getElementById('editAge').value = p.age || '';
+  document.getElementById('editHeight').value = p.height || '';
+  document.getElementById('editWeight').value = p.weight || '';
+  document.getElementById('editPregnancy').value = p.pregnancy || '';
+  onSexChange();
   haptic();
 }
 function pickEditAvatar(el) {
@@ -1588,6 +1637,11 @@ function saveProfileEdit() {
   const sel = document.querySelector('.edit-avatar-option.selected');
   if (newName) p.name = newName;
   if (sel) p.avatar = sel.dataset.av;
+  p.sex = document.getElementById('editSex').value;
+  p.age = Number(document.getElementById('editAge').value) || null;
+  p.height = Number(document.getElementById('editHeight').value) || null;
+  p.weight = Number(document.getElementById('editWeight').value) || null;
+  p.pregnancy = p.sex === 'f' ? document.getElementById('editPregnancy').value : '';
   save();
   closeEditProfile();
   renderProfiles();
@@ -1598,6 +1652,56 @@ function saveProfileEdit() {
 function closeEditProfile() {
   document.getElementById('editProfileOverlay').classList.remove('visible');
   editingProfileId = null;
+}
+
+// Wasserbedarf: hauptsächlich Gewicht (ml/kg), modifiziert über Alter & Geschlecht.
+function computeWaterNeed(p) {
+  const w = Number(p.weight);
+  if (!w || w < 20) return null;
+  const age = Number(p.age) || 30;
+  const factor = age > 65 ? 25 : age > 55 ? 30 : 35; // ml pro kg
+  let need = w * factor;
+  if (p.sex === 'm') need *= 1.05;       // mehr Muskel-/Wasseranteil
+  else if (p.sex === 'f') need *= 0.95;
+  if (p.sex === 'f') {
+    if (p.pregnancy === 'pregnant') need += 300;   // EFSA: ~+300 ml/Tag
+    else if (p.pregnancy === 'nursing') need += 700; // Stillzeit: ~+700 ml/Tag
+  }
+  need = Math.round(need / 50) * 50;
+  return Math.max(1500, Math.min(4000, need));
+}
+function readBodyInputs() {
+  return {
+    sex: document.getElementById('editSex').value,
+    age: Number(document.getElementById('editAge').value) || null,
+    height: Number(document.getElementById('editHeight').value) || null,
+    weight: Number(document.getElementById('editWeight').value) || null,
+    pregnancy: document.getElementById('editPregnancy').value
+  };
+}
+function onSexChange() {
+  const isF = document.getElementById('editSex').value === 'f';
+  document.getElementById('pregnancyField').style.display = isF ? 'flex' : 'none';
+  if (!isF) document.getElementById('editPregnancy').value = '';
+  updateBodyHint();
+}
+function updateBodyHint() {
+  const need = computeWaterNeed(readBodyInputs());
+  const hint = document.getElementById('bodyNeedHint');
+  hint.innerHTML = need
+    ? `Empfohlenes Tagesziel: <strong>${need} ml</strong> (~${(need/1000).toFixed(1)} L).<br>Basiert v. a. auf dem Gewicht, leicht angepasst nach Alter & Geschlecht. Klima &amp; Sport kommen obendrauf.`
+    : 'Gewicht eintragen, um den Wasserbedarf zu berechnen.';
+}
+function applyComputedGoal() {
+  const p = readBodyInputs();
+  const need = computeWaterNeed(p);
+  if (!need) { showToast('Bitte Gewicht eintragen'); return; }
+  const prof = editingProfileId ? root.profiles[editingProfileId] : state;
+  Object.assign(prof, p);
+  prof.baseGoal = need;
+  if (prof === state) applyWeatherBoost(); else prof.goal = need;
+  save(); render(); updateBodyHint();
+  showToast(`Tagesziel: ${need} ml`); haptic();
 }
 
 function switchProfile(id) {
