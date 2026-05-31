@@ -970,7 +970,31 @@ function freshProfile(name, avatar) {
 let state; // current profile shortcut
 let reminderTimer = null, undoTimer = null, audioCtx = null, audioUnlocked = false;
 
-function getToday() { return new Date().toISOString().split('T')[0]; }
+function pad2(n) { return String(n).padStart(2, '0'); }
+function localDateKey(d) { return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+// Lokaler Tagesschlüssel (Gerätezeit) — wechselt um 00:00 lokaler Zeit, nicht UTC.
+function getToday() { return localDateKey(new Date()); }
+
+// Hat der Tag mit gegebenem Schlüssel sein Ziel erreicht?
+function dayGoalMet(key) {
+  if (key === state.today) return state.amount >= state.goal;
+  const h = state.dailyHistory[key];
+  return !!(h && h.amount >= (h.goal || state.baseGoal));
+}
+// Aktuelle Streak: aufeinanderfolgende erfüllte Tage bis heute.
+// Heute zählt nur, wenn das Ziel heute schon erreicht ist; sonst bleibt die
+// bisherige Serie (bis gestern) bestehen, bis der Tag wirklich vorbei ist.
+function computeStreak() {
+  const d = new Date();
+  if (!(state.amount >= state.goal)) d.setDate(d.getDate() - 1);
+  let count = 0;
+  while (dayGoalMet(localDateKey(d))) { count++; d.setDate(d.getDate() - 1); }
+  return count;
+}
+function refreshStreak() {
+  state.streakCount = computeStreak();
+  if (state.streakCount > (state.bestStreak || 0)) state.bestStreak = state.streakCount;
+}
 
 // Lokaler Wochenschlüssel = Datum des Montags dieser Woche. Sa & der folgende So teilen denselben Schlüssel.
 function weekKeyOf(d) {
@@ -1059,18 +1083,15 @@ function rolloverDay() {
       state.lastGapDays = state.amount > 0 ? 0 : (state.lastGapDays || 0) + 1;
       if (gap > 0) state.lastGapDays = gap;
       const wasDone = state.amount >= state.goal;
-      const dow = new Date(state.today).getDay();
+      const dow = new Date(state.today + 'T00:00:00').getDay();
       state.streak[dow] = wasDone;
-      if (wasDone) {
-        state.streakCount = (state.streakCount || 0) + 1;
-        if (state.streakCount > state.bestStreak) state.bestStreak = state.streakCount;
-      } else state.streakCount = 0;
       state.lifetimeDays = (state.lifetimeDays || 0) + 1;
       const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 90);
       Object.keys(state.dailyHistory).forEach(k => { if (new Date(k) < cutoff) delete state.dailyHistory[k]; });
     }
     state.amount = 0; state.drinks = 0; state.history = []; state.today = today;
     if (state.flags) state.flags.typesToday = [];
+    refreshStreak();
     save();
   }
 }
@@ -1439,13 +1460,12 @@ function addWater(raw, type, btn) {
   if (!state.flags.typesToday) state.flags.typesToday = [];
   if (!state.flags.typesToday.includes(type)) state.flags.typesToday.push(type);
   if (state.flags.typesToday.length >= 4) state.flags.variety = true;
-  // weekend: Sa & So derselben Woche beide Ziele erreicht
+  // weekend: Sonntag-Ziel erreicht UND der zugehörige Samstag war ebenfalls erfüllt
   const dow = new Date().getDay();
-  if ((dow === 6 || dow === 0) && state.amount >= state.goal) {
-    const wk = weekKeyOf(new Date());
-    if (state.flags.weekendWeek !== wk) { state.flags.weekendWeek = wk; state.flags.weekendSat = false; state.flags.weekendSun = false; }
-    if (dow === 6) state.flags.weekendSat = true; else state.flags.weekendSun = true;
-    if (state.flags.weekendSat && state.flags.weekendSun) state.flags.weekend = true;
+  if (dow === 0 && state.amount >= state.goal) {
+    const sat = localDateKey(new Date(Date.now() - 86400000));
+    const h = state.dailyHistory[sat];
+    if (h && h.amount >= (h.goal || state.baseGoal)) state.flags.weekend = true;
   }
   // comeback: reached goal after a gap of 2+ days without activity
   if (state.amount >= state.goal && state.lastGapDays >= 2) state.flags.comeback = true;
@@ -1457,7 +1477,8 @@ function addWater(raw, type, btn) {
   spawnDroplets(btn); avatarHappy(); spawnBubbles(5); ringRipple();
 
   if (wasUnder && state.amount >= state.goal) {
-    if (state.streakCount === 0) { state.streakCount = 1; if (state.bestStreak < 1) state.bestStreak = 1; }
+    refreshStreak(); save();
+    document.getElementById('statStreak').textContent = state.streakCount || 0;
     setTimeout(() => { showToast('🎉 Tagesziel erreicht!'); celebrate(); }, 800);
   }
   checkAchievements();
@@ -1849,6 +1870,7 @@ function addLogEntry() {
     if (day.amount >= (day.goal || state.baseGoal)) state.streak[dow] = true;
   }
 
+  refreshStreak();
   save(); render(); renderLog();
   document.getElementById('logMl').value = '';
   showToast(`+${raw} ml nachgetragen`);
