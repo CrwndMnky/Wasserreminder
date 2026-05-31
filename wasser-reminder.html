@@ -45,6 +45,11 @@
       --accent-rgb: 199,125,255;
       --blob1: #e0aaff; --blob2: #9d4edd; --blob3: #c77dff;
     }
+    [data-theme="gold"] {
+      --accent: #ffca28; --accent2: #ff8f00; --accent3: #ffe57f;
+      --accent-rgb: 255,202,40;
+      --blob1: #ffe57f; --blob2: #ff8f00; --blob3: #ffca28;
+    }
     [data-theme="custom"] {
       --accent: #9c27b0; --accent2: #7b1fa2; --accent3: #ba68c8;
       --accent-rgb: 156,39,176;
@@ -65,6 +70,7 @@
     [data-theme="sunset"][data-mode="dark"], [data-theme="sunset"]:not([data-mode]) { --gold: #ffb74d; --bg: #1a0e14; --bg2: #2a1320; --surface: #38182a; --surface2: #4a2038; }
     [data-theme="forest"][data-mode="dark"], [data-theme="forest"]:not([data-mode]) { --gold: #d4e157; --bg: #0a1612; --bg2: #0e2018; --surface: #122a20; --surface2: #1a3a2c; }
     [data-theme="berry"][data-mode="dark"], [data-theme="berry"]:not([data-mode]) { --gold: #f0a6c8; --bg: #14081a; --bg2: #1d0e26; --surface: #261433; --surface2: #341a45; }
+    [data-theme="gold"][data-mode="dark"], [data-theme="gold"]:not([data-mode]) { --gold: #ffe57f; --bg: #1a1200; --bg2: #261a00; --surface: #332200; --surface2: #422e00; }
     [data-theme="custom"][data-mode="dark"], [data-theme="custom"]:not([data-mode]) { --gold: #e0a8d8; --bg: #12001a; --bg2: #1a0824; --surface: #221030; --surface2: #2e1840; }
 
     /* --- Light mode surfaces --- */
@@ -80,12 +86,14 @@
     [data-theme="sunset"][data-mode="light"] { --gold: #f57c00; --bg: #fdf0f2; --bg2: #ffffff; --surface: #ffffff; --surface2: #fbe0e6; }
     [data-theme="forest"][data-mode="light"] { --gold: #9e9d24; --bg: #eef9f1; --bg2: #ffffff; --surface: #ffffff; --surface2: #d8f0e0; }
     [data-theme="berry"][data-mode="light"] { --gold: #c2185b; --bg: #f7eefc; --bg2: #ffffff; --surface: #ffffff; --surface2: #efe0fb; }
+    [data-theme="gold"][data-mode="light"] { --gold: #e65100; --bg: #fffbee; --bg2: #ffffff; --surface: #ffffff; --surface2: #fff3cd; }
     [data-theme="custom"][data-mode="light"] { --gold: #ab2f9e; --bg: #f6eefb; --bg2: #ffffff; --surface: #ffffff; --surface2: #ece0f5; }
     /* In light mode, use darker accent variants for contrast on white */
     [data-mode="light"][data-theme="ocean"] { --accent: #0288d1; --accent2: #0277bd; --accent3: #039be5; }
     [data-mode="light"][data-theme="sunset"] { --accent: #e85d8a; --accent2: #d84368; --accent3: #f57c5c; }
     [data-mode="light"][data-theme="forest"] { --accent: #1a9d5f; --accent2: #15823f; --accent3: #00b377; }
     [data-mode="light"][data-theme="berry"] { --accent: #8e24aa; --accent2: #6a1b9a; --accent3: #ab47bc; }
+    [data-mode="light"][data-theme="gold"] { --accent: #e65100; --accent2: #bf360c; --accent3: #ff6d00; }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     /* iOS zooms inputs with <16px text — force 16px on all form fields */
@@ -889,6 +897,7 @@ const THEMES = [
   { id: 'sunset', name: 'Sonnenuntergang', c1: '#ffb347', c2: '#ff6b9d' },
   { id: 'forest', name: 'Wald', c1: '#00e589', c2: '#2bb673' },
   { id: 'berry', name: 'Beere', c1: '#e0aaff', c2: '#9d4edd' },
+  { id: 'gold', name: 'Gold', c1: '#ffe57f', c2: '#ff8f00' },
   { id: 'custom', name: 'Eigenes', c1: '#ba68c8', c2: '#7b1fa2' }
 ];
 
