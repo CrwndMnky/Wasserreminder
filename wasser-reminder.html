@@ -1283,10 +1283,16 @@ function render() {
 
   // theme grid
   const tg = document.getElementById('themeGrid');
-  if (!tg.dataset.built) {
-    tg.innerHTML = THEMES.map(t => `<div class="theme-option" data-theme-id="${t.id}" onclick="selectTheme('${t.id}')"><div class="theme-swatch" style="background:linear-gradient(135deg,${t.c1},${t.c2})"></div><div class="theme-name">${t.name}</div></div>`).join('');
-    tg.dataset.built = '1';
-  }
+  tg.innerHTML = THEMES.map(t => {
+    let c1 = t.c1, c2 = t.c2;
+    if (t.id === 'custom') {
+      c1 = root.customAccent;
+      const n = parseInt(c1.slice(1), 16);
+      const clamp = v => Math.max(0, Math.min(255, v));
+      c2 = `#${[n>>16, (n>>8)&255, n&255].map(v => clamp(v-70).toString(16).padStart(2,'0')).join('')}`;
+    }
+    return `<div class="theme-option" data-theme-id="${t.id}" onclick="selectTheme('${t.id}')"><div class="theme-swatch" style="background:linear-gradient(135deg,${c1},${c2})"></div><div class="theme-name">${t.name}</div></div>`;
+  }).join('');
   document.querySelectorAll('.theme-option').forEach(el => el.classList.toggle('selected', el.dataset.themeId === root.theme));
   document.getElementById('customThemeRow').style.display = (root.theme === 'custom') ? 'block' : 'none';
   document.getElementById('customAccent').value = root.customAccent;
@@ -1599,6 +1605,13 @@ function updateCustomColor(val) {
   root.customAccent = val;
   save();
   applyTheme();
+  const swatch = document.querySelector('[data-theme-id="custom"] .theme-swatch');
+  if (swatch) {
+    const n = parseInt(val.slice(1), 16);
+    const clamp = v => Math.max(0, Math.min(255, v));
+    const c2 = `#${[n>>16, (n>>8)&255, n&255].map(v => clamp(v-70).toString(16).padStart(2,'0')).join('')}`;
+    swatch.style.background = `linear-gradient(135deg,${val},${c2})`;
+  }
 }
 
 function resetDay() {
